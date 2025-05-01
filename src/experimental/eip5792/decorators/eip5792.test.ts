@@ -1,3 +1,5 @@
+// TODO(v3): Remove this.
+
 import { describe, expect, test } from 'vitest'
 
 import { wagmiContractConfig } from '~test/src/abis.js'
@@ -102,7 +104,7 @@ describe('smoke test', () => {
         ],
         "status": "success",
         "statusCode": 200,
-        "version": "1.0",
+        "version": "2.0.0",
       }
     `)
   })

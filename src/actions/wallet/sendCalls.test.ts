@@ -1,20 +1,20 @@
 import { expect, test } from 'vitest'
-import { wagmiContractConfig } from '../../../../test/src/abis.js'
-import { anvilMainnet } from '../../../../test/src/anvil.js'
-import { accounts } from '../../../../test/src/constants.js'
-import { reset } from '../../../actions/index.js'
-import { type Chain, mainnet } from '../../../chains/index.js'
-import { type Client, createClient } from '../../../clients/createClient.js'
-import type { Transport } from '../../../clients/transports/createTransport.js'
-import { custom } from '../../../clients/transports/custom.js'
-import { RpcRequestError } from '../../../errors/request.js'
+import { wagmiContractConfig } from '../../../test/src/abis.js'
+import { anvilMainnet } from '../../../test/src/anvil.js'
+import { accounts } from '../../../test/src/constants.js'
+import { type Chain, mainnet } from '../../chains/index.js'
+import { type Client, createClient } from '../../clients/createClient.js'
+import type { Transport } from '../../clients/transports/createTransport.js'
+import { custom } from '../../clients/transports/custom.js'
+import { RpcRequestError } from '../../errors/request.js'
 import type {
   WalletCallReceipt,
   WalletGetCallsStatusReturnType,
-} from '../../../types/eip1193.js'
-import type { Hex } from '../../../types/misc.js'
-import { getHttpRpcClient, parseEther } from '../../../utils/index.js'
-import { uid } from '../../../utils/uid.js'
+} from '../../types/eip1193.js'
+import type { Hex } from '../../types/misc.js'
+import { getHttpRpcClient, parseEther } from '../../utils/index.js'
+import { uid } from '../../utils/uid.js'
+import { reset } from '../index.js'
 import { sendCalls } from './sendCalls.js'
 
 type Uid = string
@@ -47,7 +47,7 @@ const getClient = <chain extends Chain | undefined = undefined>({
               id: params[0],
               status: 100,
               receipts: [],
-              version: '1.0',
+              version: '2.0.0',
             } satisfies WalletGetCallsStatusReturnType
 
           const receipts = await Promise.all(
@@ -82,7 +82,7 @@ const getClient = <chain extends Chain | undefined = undefined>({
             id: params[0],
             status: 200,
             receipts,
-            version: '1.0',
+            version: '2.0.0',
           } satisfies WalletGetCallsStatusReturnType
         }
 
@@ -207,7 +207,7 @@ test('default', async () => {
           "chainId": "0x1",
           "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
           "id": undefined,
-          "version": "1.0",
+          "version": "2.0.0",
         },
       ],
     ]
@@ -294,7 +294,7 @@ test('behavior: chain on client', async () => {
           "chainId": "0x1",
           "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
           "id": undefined,
-          "version": "1.0",
+          "version": "2.0.0",
         },
       ],
     ]
@@ -381,7 +381,7 @@ test('behavior: inferred account', async () => {
           "chainId": "0x1",
           "from": undefined,
           "id": undefined,
-          "version": "1.0",
+          "version": "2.0.0",
         },
       ],
     ]
@@ -422,7 +422,7 @@ test('error: no account', async () => {
     [AccountNotFoundError: Could not find an Account to execute with this Action.
     Please provide an Account with the \`account\` argument on the Action, or by supplying an \`account\` to the Client.
 
-    Docs: https://viem.sh/experimental/eip5792/sendCalls
+    Docs: https://viem.sh/docs/actions/wallet/sendCalls
     Version: viem@x.y.z]
   `)
 })
