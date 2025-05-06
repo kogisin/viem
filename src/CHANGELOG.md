@@ -1,5 +1,43 @@
 # viem
 
+## 2.29.0
+
+### Minor Changes
+
+- [#3621](https://github.com/wevm/viem/pull/3621) [`cede184b5ed9519ce8538bd9e99db4961d531798`](https://github.com/wevm/viem/commit/cede184b5ed9519ce8538bd9e99db4961d531798) Thanks [@jxom](https://github.com/jxom)! - **Experimental:** Added `addSubAccount` Action as per [ERC-7895](https://github.com/ethereum/ERCs/blob/4d3d641ee3c84750baf461b8dd71d27c424417a9/ERCS/erc-7895.md).
+
+- [#3619](https://github.com/wevm/viem/pull/3619) [`4563ed5147f13c679043fae30d955b7a72cfc60f`](https://github.com/wevm/viem/commit/4563ed5147f13c679043fae30d955b7a72cfc60f) Thanks [@jxom](https://github.com/jxom)! - **Experimental:** Added capabilities for the `connect` Action:
+
+  - `unstable_addSubAccount`: Adds a sub-account to the connected account. [See more](https://github.com/ethereum/ERCs/blob/4d3d641ee3c84750baf461b8dd71d27c424417a9/ERCS/erc-7895.md).
+  - `unstable_getSubAccounts`: Returns all sub-accounts of the connected account. [See more](https://github.com/ethereum/ERCs/blob/4d3d641ee3c84750baf461b8dd71d27c424417a9/ERCS/erc-7895.md).
+  - `unstable_signInWithEthereum`: Connect + Authenticate using Sign-In with Ethereum.[See more](https://github.com/ethereum/ERCs/blob/abd1c9f4eda2d6ad06ade0e3af314637a27d1ee7/ERCS/erc-7846.md#signinwithethereum).
+
+- [#3619](https://github.com/wevm/viem/pull/3619) [`4563ed5147f13c679043fae30d955b7a72cfc60f`](https://github.com/wevm/viem/commit/4563ed5147f13c679043fae30d955b7a72cfc60f) Thanks [@jxom](https://github.com/jxom)! - **Experimental:** Added `connect` + `disconnect` Actions as per [ERC-7836: Wallet Connection API (`wallet_connect`)](https://github.com/ethereum/ERCs/pull/779).
+
+### Patch Changes
+
+- [#3626](https://github.com/wevm/viem/pull/3626) [`da3a50f01b8383c2c6023a57806aae0fb6e6e585`](https://github.com/wevm/viem/commit/da3a50f01b8383c2c6023a57806aae0fb6e6e585) Thanks [@fubhy](https://github.com/fubhy)! - Updated `watchBlocks` to also work from genesis blocks using `emitMissed`.
+
+## 2.28.4
+
+### Patch Changes
+
+- [#3615](https://github.com/wevm/viem/pull/3615) [`804187c8c8b48654605f47e4383a57ec66a21064`](https://github.com/wevm/viem/commit/804187c8c8b48654605f47e4383a57ec66a21064) Thanks [@jxom](https://github.com/jxom)! - Added typed EIP-5792 capabilities.
+
+## 2.28.3
+
+### Patch Changes
+
+- [#3611](https://github.com/wevm/viem/pull/3611) [`6cc31bbc87c788b0ccad15ab648e467222ae9105`](https://github.com/wevm/viem/commit/6cc31bbc87c788b0ccad15ab648e467222ae9105) Thanks [@jxom](https://github.com/jxom)! - Passed `chainId` to `wallet_getCapabilities`.
+
+## 2.28.2
+
+### Patch Changes
+
+- [#3600](https://github.com/wevm/viem/pull/3600) [`198504d07507e9ece02f00241a567bec43eae38a`](https://github.com/wevm/viem/commit/198504d07507e9ece02f00241a567bec43eae38a) Thanks [@TateB](https://github.com/TateB)! - Added `type` parameter to `sendTransaction`.
+
+- [#3607](https://github.com/wevm/viem/pull/3607) [`e39d6c1ea4a54866bfeb7eadb445598d20033798`](https://github.com/wevm/viem/commit/e39d6c1ea4a54866bfeb7eadb445598d20033798) Thanks [@Ryan-Adami](https://github.com/Ryan-Adami)! - Updated Fraxtal and Fraxtal testnet native currency to FRAX.
+
 ## 2.28.1
 
 ### Patch Changes
