@@ -371,6 +371,11 @@ export type {
   SignTransactionReturnType,
 } from './actions/wallet/signTransaction.js'
 export type {
+  PrepareAuthorizationErrorType,
+  PrepareAuthorizationParameters,
+  PrepareAuthorizationReturnType,
+} from './actions/wallet/prepareAuthorization.js'
+export type {
   PrepareTransactionRequestErrorType,
   PrepareTransactionRequestParameters,
   PrepareTransactionRequestParameterType,
@@ -382,6 +387,11 @@ export type {
   GetCapabilitiesErrorType,
   GetCapabilitiesReturnType,
 } from './actions/wallet/getCapabilities.js'
+export type {
+  SignAuthorizationErrorType,
+  SignAuthorizationParameters,
+  SignAuthorizationReturnType,
+} from './actions/wallet/signAuthorization.js'
 export type {
   SendCallsErrorType,
   SendCallsParameters,
@@ -770,6 +780,10 @@ export {
 } from './errors/abi.js'
 export { BaseError, type BaseErrorType, setErrorConfig } from './errors/base.js'
 export {
+  BundleFailedError,
+  type BundleFailedErrorType,
+} from './errors/calls.js'
+export {
   BlockNotFoundError,
   type BlockNotFoundErrorType,
 } from './errors/block.js'
@@ -887,6 +901,8 @@ export {
   EnsAvatarUnsupportedNamespaceError,
   type EnsAvatarUnsupportedNamespaceErrorType,
   type EnsAvatarUriResolutionErrorType,
+  EnsInvalidChainIdError,
+  type EnsInvalidChainIdErrorType,
 } from './errors/ens.js'
 export {
   type InvalidDecimalNumberErrorType,
@@ -1142,6 +1158,8 @@ export type {
   RpcSchema,
   RpcSchemaOverride,
   TestRpcSchema,
+  WalletGetAssetsParameters,
+  WalletGetAssetsReturnType,
   WalletCallReceipt,
   WalletGetCallsStatusReturnType,
   WalletGrantPermissionsParameters,
@@ -1180,6 +1198,7 @@ export type {
 export type {
   Authorization,
   AuthorizationList,
+  AuthorizationRequest,
   SerializedAuthorization,
   SerializedAuthorizationList,
   SignedAuthorization,
@@ -1212,6 +1231,10 @@ export type {
   StateMapping,
   StateOverride,
 } from './types/stateOverride.js'
+export {
+  toCoinType,
+  type ToCoinTypeError,
+} from './utils/ens/toCoinType.js'
 export { labelhash, type LabelhashErrorType } from './utils/ens/labelhash.js'
 export { namehash, type NamehashErrorType } from './utils/ens/namehash.js'
 export {

@@ -1000,6 +1000,10 @@ export const sidebar = {
           text: 'Hash',
           items: [
             {
+              text: 'isHash',
+              link: '/docs/utilities/isHash',
+            },
+            {
               text: 'keccak256',
               link: '/docs/utilities/keccak256',
             },
@@ -1223,6 +1227,10 @@ export const sidebar = {
                 link: '/account-abstraction/accounts/smart/toCoinbaseSmartAccount',
               },
               {
+                text: 'MetaMask',
+                link: '/account-abstraction/accounts/smart/toMetaMaskSmartAccount',
+              },
+              {
                 text: 'Thirdweb',
                 link: '/account-abstraction/accounts/smart/toThirdwebSmartAccount',
               },
@@ -1409,6 +1417,24 @@ export const sidebar = {
               {
                 text: 'wrapTypedDataSignature',
                 link: '/experimental/erc7739/wrapTypedDataSignature',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'ERC-7811',
+        items: [
+          {
+            text: 'Client',
+            link: '/experimental/erc7811/client',
+          },
+          {
+            text: 'Actions',
+            items: [
+              {
+                text: 'getAssets',
+                link: '/experimental/erc7811/getAssets',
               },
             ],
           },
@@ -1700,6 +1726,41 @@ export const sidebar = {
       },
     ],
   },
+  '/circle-usdc': {
+    backLink: true,
+    items: [
+      {
+        text: 'USDC (Circle)',
+        items: [
+          {
+            text: 'Introduction',
+            link: '/circle-usdc',
+          },
+        ],
+      },
+      {
+        text: 'Guides',
+        items: [
+          {
+            text: 'Integrating USDC',
+            link: '/circle-usdc/guides/integrating',
+          },
+          {
+            text: 'Cross-Chain Transfers',
+            link: '/circle-usdc/guides/cross-chain',
+          },
+          {
+            text: 'Paying Gas with USDC',
+            link: '/circle-usdc/guides/paymaster',
+          },
+          {
+            text: 'Circle Smart Account',
+            link: '/circle-usdc/guides/smart-account',
+          },
+        ],
+      },
+    ],
+  },
   '/zksync': {
     backLink: true,
     items: [
@@ -1756,20 +1817,8 @@ export const sidebar = {
         text: 'L2 Public Actions',
         items: [
           {
-            text: 'estimateFee',
-            link: '/zksync/actions/estimateFee',
-          },
-          {
             text: 'estimateGasL1ToL2',
             link: '/zksync/actions/estimateGasL1ToL2',
-          },
-          {
-            text: 'getAllBalances',
-            link: '/zksync/actions/getAllBalances',
-          },
-          {
-            text: 'getBaseTokenL1Address',
-            link: '/zksync/actions/getBaseTokenL1Address',
           },
           {
             text: 'getBlockDetails',
@@ -1784,6 +1833,10 @@ export const sidebar = {
             link: '/zksync/actions/getDefaultBridgeAddress',
           },
           {
+            text: 'getGasPerPubData',
+            link: '/zksync/actions/getGasPerPubData',
+          },
+          {
             text: 'getL1BatchDetails',
             link: '/zksync/actions/getL1BatchDetails',
           },
@@ -1794,10 +1847,6 @@ export const sidebar = {
           {
             text: 'getL1BatchNumber',
             link: '/zksync/actions/getL1BatchNumber',
-          },
-          {
-            text: 'getL1ChainId',
-            link: '/zksync/actions/getL1ChainId',
           },
           {
             text: 'getL1TokenAddress',
@@ -1812,20 +1861,36 @@ export const sidebar = {
             link: '/zksync/actions/getLogProof',
           },
           {
-            text: 'getMainContractAddress',
+            text: 'getTransactionDetails',
+            link: '/zksync/actions/getTransactionDetails',
+          },
+          {
+            text: 'estimateFee (deprecated)',
+            link: '/zksync/actions/estimateFee',
+          },
+          {
+            text: 'getAllBalances (deprecated)',
+            link: '/zksync/actions/getAllBalances',
+          },
+          {
+            text: 'getBaseTokenL1Address (deprecated)',
+            link: '/zksync/actions/getBaseTokenL1Address',
+          },
+          {
+            text: 'getL1ChainId (deprecated)',
+            link: '/zksync/actions/getL1ChainId',
+          },
+          {
+            text: 'getMainContractAddress (deprecated)',
             link: '/zksync/actions/getMainContractAddress',
           },
           {
-            text: 'getRawBlockTransaction',
+            text: 'getRawBlockTransaction (deprecated)',
             link: '/zksync/actions/getRawBlockTransactions',
           },
           {
-            text: 'getTestnetPaymasterAddress',
+            text: 'getTestnetPaymasterAddress (deprecated)',
             link: '/zksync/actions/getTestnetPaymasterAddress',
-          },
-          {
-            text: 'getTransactionDetails',
-            link: '/zksync/actions/getTransactionDetails',
           },
         ],
       },
@@ -1873,6 +1938,10 @@ export const sidebar = {
           {
             text: 'deposit',
             link: '/zksync/actions/deposit',
+          },
+          {
+            text: 'claimFailedDeposit',
+            link: '/zksync/actions/claimFailedDeposit',
           },
         ],
       },

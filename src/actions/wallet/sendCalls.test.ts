@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { wagmiContractConfig } from '../../../test/src/abis.js'
 import { anvilMainnet } from '../../../test/src/anvil.js'
 import { accounts } from '../../../test/src/constants.js'
@@ -195,7 +195,7 @@ test('default', async () => {
               "value": undefined,
             },
           ],
-          "capabilities": {},
+          "capabilities": undefined,
           "chainId": "0x1",
           "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
           "id": undefined,
@@ -277,7 +277,7 @@ test('behavior: chain on client', async () => {
               "value": undefined,
             },
           ],
-          "capabilities": {},
+          "capabilities": undefined,
           "chainId": "0x1",
           "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
           "id": undefined,
@@ -298,7 +298,6 @@ test('behavior: inferred account', async () => {
   })
 
   const { id } = await sendCalls(client, {
-    account: null,
     chain: mainnet,
     calls: [
       {
@@ -359,7 +358,7 @@ test('behavior: inferred account', async () => {
               "value": undefined,
             },
           ],
-          "capabilities": {},
+          "capabilities": undefined,
           "chainId": "0x1",
           "from": undefined,
           "id": undefined,
@@ -383,9 +382,7 @@ test('behavior: capability: paymasterService', async () => {
     account: accounts[0].address,
     capabilities: {
       paymasterService: {
-        1: {
-          url: 'https://paymaster.com',
-        },
+        url: 'https://paymaster.com',
       },
     },
     chain: mainnet,
@@ -412,9 +409,7 @@ test('behavior: capability: paymasterService', async () => {
           ],
           "capabilities": {
             "paymasterService": {
-              "0x1": {
-                "url": "https://paymaster.com",
-              },
+              "url": "https://paymaster.com",
             },
           },
           "chainId": "0x1",
@@ -427,19 +422,13 @@ test('behavior: capability: paymasterService', async () => {
   `)
 })
 
-test('error: no account', async () => {
-  const requests: unknown[] = []
+describe('behavior: eth_sendTransaction fallback', () => {
+  const client = anvilMainnet.getClient()
 
-  const client = getClient({
-    chain: mainnet,
-    onRequest({ params }) {
-      requests.push(params)
-    },
-  })
-
-  await expect(() =>
-    // @ts-expect-error
-    sendCalls(client, {
+  test('default', async () => {
+    const response = await sendCalls(client, {
+      account: accounts[0].address,
+      chain: mainnet,
       calls: [
         {
           to: accounts[1].address,
@@ -447,23 +436,205 @@ test('error: no account', async () => {
         },
         {
           to: accounts[2].address,
-          value: parseEther('10'),
         },
         {
           data: '0xcafebabe',
           to: accounts[3].address,
-          value: parseEther('1000000'),
+          value: parseEther('100'),
+        },
+        {
+          abi: wagmiContractConfig.abi,
+          functionName: 'mint',
+          to: wagmiContractConfig.address,
         },
       ],
-      chain: mainnet,
-    }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot(`
-    [AccountNotFoundError: Could not find an Account to execute with this Action.
-    Please provide an Account with the \`account\` argument on the Action, or by supplying an \`account\` to the Client.
+      experimental_fallback: true,
+    })
 
-    Docs: https://viem.sh/docs/actions/wallet/sendCalls
-    Version: viem@x.y.z]
-  `)
+    expect(response.id).toMatchInlineSnapshot(
+      `"0xb0fd8d440a3cb766200a237ad236241a70660e6f13398c880ed913fce620e8e5386fc7a922e91f765fc5034631f96c76a801071d0285fec1c43f856eb4445566e7941d94f9057aca5978cbeda09c96f6772ca5762c257867382a4da0cdea36dd6c1959f1051e01bb652246da0bb803ba6e678864cd6382b40c0bfb1ae1c3202600000000000000000000000000000000000000000000000000000000000000015792579257925792579257925792579257925792579257925792579257925792"`,
+    )
+  })
+
+  test('behavior: optional capabilities', async () => {
+    const response = await sendCalls(client, {
+      account: accounts[0].address,
+      chain: mainnet,
+      calls: [
+        {
+          to: accounts[1].address,
+          value: parseEther('1'),
+        },
+        {
+          to: accounts[2].address,
+        },
+        {
+          data: '0xcafebabe',
+          to: accounts[3].address,
+          value: parseEther('100'),
+        },
+        {
+          abi: wagmiContractConfig.abi,
+          functionName: 'mint',
+          to: wagmiContractConfig.address,
+        },
+      ],
+      experimental_fallback: true,
+      capabilities: {
+        paymasterService: {
+          optional: true,
+          url: 'https://example.com',
+        },
+      },
+    })
+
+    expect(response.id).toBeDefined()
+  })
+
+  test('behavior: non-optional capabilities', async () => {
+    await expect(() =>
+      sendCalls(client, {
+        account: accounts[0].address,
+        chain: mainnet,
+        calls: [
+          {
+            to: accounts[1].address,
+            value: parseEther('1'),
+          },
+          {
+            to: accounts[2].address,
+          },
+          {
+            data: '0xcafebabe',
+            to: accounts[3].address,
+            value: parseEther('100'),
+          },
+          {
+            abi: wagmiContractConfig.abi,
+            functionName: 'mint',
+            to: wagmiContractConfig.address,
+          },
+        ],
+        experimental_fallback: true,
+        capabilities: {
+          paymasterService: {
+            url: 'https://example.com',
+          },
+        },
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [UnsupportedNonOptionalCapabilityError: This Wallet does not support a capability that was not marked as optional.
+
+      Details: non-optional \`capabilities\` are not supported on fallback to \`eth_sendTransaction\`.
+      Version: viem@x.y.z]
+    `)
+  })
+
+  test('behavior: atomic', async () => {
+    await expect(() =>
+      sendCalls(client, {
+        account: accounts[0].address,
+        chain: mainnet,
+        calls: [
+          {
+            to: accounts[1].address,
+            value: parseEther('1'),
+          },
+          {
+            to: accounts[2].address,
+          },
+          {
+            data: '0xcafebabe',
+            to: accounts[3].address,
+            value: parseEther('100'),
+          },
+          {
+            abi: wagmiContractConfig.abi,
+            functionName: 'mint',
+            to: wagmiContractConfig.address,
+          },
+        ],
+        experimental_fallback: true,
+        forceAtomic: true,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [AtomicityNotSupportedError: The wallet does not support atomic execution but the request requires it.
+
+      Details: \`forceAtomic\` is not supported on fallback to \`eth_sendTransaction\`.
+      Version: viem@x.y.z]
+    `)
+  })
+
+  test('behavior: insufficient funds (complete)', async () => {
+    await expect(() =>
+      sendCalls(client, {
+        account: accounts[0].address,
+        chain: mainnet,
+        calls: [
+          {
+            to: accounts[1].address,
+            value: parseEther('99999'),
+          },
+          {
+            to: accounts[2].address,
+            value: parseEther('99999'),
+          },
+          {
+            data: '0xcafebabe',
+            to: accounts[3].address,
+            value: parseEther('99999'),
+          },
+        ],
+        experimental_fallback: true,
+        experimental_fallbackDelay: 0,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [TransactionExecutionError: The total cost (gas * gas fee + value) of executing this transaction exceeds the balance of the account.
+
+      This error could arise when the account does not have enough funds to:
+       - pay for the total gas fee,
+       - pay for the value to send.
+       
+      The cost of the transaction is calculated as \`gas * gas fee + value\`, where:
+       - \`gas\` is the amount of gas needed for transaction to execute,
+       - \`gas fee\` is the gas fee,
+       - \`value\` is the amount of ether to send to the recipient.
+       
+      Request Arguments:
+        chain:  Ethereum (id: 1)
+        from:   0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+        to:     0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+        value:  99999 ETH
+
+      Details: Insufficient funds for gas * price + value
+      Version: viem@x.y.z]
+    `)
+  })
+
+  test('behavior: insufficient funds (partial)', async () => {
+    const response = await sendCalls(client, {
+      account: accounts[0].address,
+      chain: mainnet,
+      calls: [
+        {
+          to: accounts[1].address,
+          value: parseEther('1'),
+        },
+        {
+          to: accounts[2].address,
+          value: parseEther('1'),
+        },
+        {
+          data: '0xcafebabe',
+          to: accounts[3].address,
+          value: parseEther('99999'),
+        },
+      ],
+      experimental_fallback: true,
+      experimental_fallbackDelay: 0,
+    })
+    expect(response.id).toBeDefined()
+  })
 })
 
 test('error: insufficient funds', async () => {
@@ -514,5 +685,51 @@ test('error: insufficient funds', async () => {
 
     Details: Insufficient funds for gas * price + value
     Version: viem@x.y.z]
+  `)
+})
+
+test('args: dataSuffix', async () => {
+  const requests: unknown[] = []
+
+  const client = getClient({
+    onRequest({ params }) {
+      requests.push(params)
+    },
+  })
+
+  const response = await sendCalls(client, {
+    account: accounts[0].address,
+    chain: mainnet,
+    calls: [
+      {
+        abi: wagmiContractConfig.abi,
+        functionName: 'mint',
+        to: wagmiContractConfig.address,
+        dataSuffix: '0x12345678',
+      },
+    ],
+  })
+
+  expect(response.id).toBeDefined()
+  expect(requests).toMatchInlineSnapshot(`
+    [
+      [
+        {
+          "atomicRequired": false,
+          "calls": [
+            {
+              "data": "0x1249c58b12345678",
+              "to": "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+              "value": undefined,
+            },
+          ],
+          "capabilities": undefined,
+          "chainId": "0x1",
+          "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "id": undefined,
+          "version": "2.0.0",
+        },
+      ],
+    ]
   `)
 })

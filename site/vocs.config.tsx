@@ -127,6 +127,19 @@ export default defineConfig({
               'https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/routescan-light.svg',
           },
         ],
+        [
+          {
+            name: 'Gemini',
+            link: 'https://gemini.com',
+            image:
+              'https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/gemini-light.svg',
+          },
+          {
+            name: '',
+            link: 'https://github.com/sponsors/wevm',
+            image: '',
+          },
+        ],
       ],
     },
     {
@@ -307,6 +320,10 @@ export default defineConfig({
         {
           text: 'OP Stack',
           link: '/op-stack',
+        },
+        {
+          text: 'USDC (Circle)',
+          link: '/circle-usdc',
         },
         {
           text: 'ZKsync',

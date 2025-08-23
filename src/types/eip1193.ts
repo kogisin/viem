@@ -176,6 +176,31 @@ export type WalletGrantPermissionsReturnType = {
     | undefined
 }
 
+export type WalletGetAssetsParameters = {
+  account: Address
+  assetFilter?:
+    | {
+        [chainId: Hex]: readonly {
+          address: Address
+          type: 'native' | 'erc20' | 'erc721' | (string & {})
+        }[]
+      }
+    | undefined
+  assetTypeFilter?:
+    | readonly ('native' | 'erc20' | 'erc721' | (string & {}))[]
+    | undefined
+  chainFilter?: readonly Hex[] | undefined
+}
+
+export type WalletGetAssetsReturnType = {
+  [chainId: Hex]: readonly {
+    address: Address | 'native'
+    balance: Hex
+    metadata?: unknown | undefined
+    type: 'native' | 'erc20' | 'erc721' | (string & {})
+  }[]
+}
+
 export type WalletGetCallsStatusReturnType<
   capabilities extends Capabilities = Capabilities,
   numberType = Hex,
@@ -643,24 +668,33 @@ export type PublicRpcSchema = [
   {
     Method: 'eth_call'
     Parameters:
-      | [transaction: ExactPartial<TransactionRequest>]
-      | [
+      | readonly [transaction: ExactPartial<TransactionRequest>]
+      | readonly [
           transaction: ExactPartial<TransactionRequest>,
           block: BlockNumber | BlockTag | BlockIdentifier,
         ]
-      | [
+      | readonly [
           transaction: ExactPartial<TransactionRequest>,
           block: BlockNumber | BlockTag | BlockIdentifier,
           stateOverrideSet: RpcStateOverride,
         ]
+      | readonly [
+          transaction: ExactPartial<TransactionRequest>,
+          block: BlockNumber | BlockTag | BlockIdentifier,
+          stateOverrideSet: RpcStateOverride,
+          blockOverrides: BlockOverrides.Rpc,
+        ]
     ReturnType: Hex
   },
   /**
-   * @description Executes a new message call immediately without submitting a transaction to the network
+   * @description Creates an EIP-2930 access list that can be included in a transaction.
    *
    * @example
-   * provider.request({ method: 'eth_call', params: [{ to: '0x...', data: '0x...' }] })
-   * // => '0x...'
+   * provider.request({ method: 'eth_createAccessList', params: [{ to: '0x...', data: '0x...' }] })
+   * // => {
+   * //   accessList: ['0x...', '0x...'],
+   * //   gasUsed: '0x123',
+   * // }
    */
   {
     Method: 'eth_createAccessList'
@@ -1833,6 +1867,18 @@ export type WalletRpcSchema = [
     Method: 'wallet_disconnect'
     Parameters?: undefined
     ReturnType: void
+  },
+  /**
+   * @description Returns the assets owned by the wallet.
+   * @link https://github.com/ethereum/ERCs/blob/master/ERCS/erc-7811.md
+   * @example
+   * provider.request({ method: 'wallet_getAssets', params: [...] })
+   * // => { ... }
+   */
+  {
+    Method: 'wallet_getAssets'
+    Parameters?: [WalletGetAssetsParameters]
+    ReturnType: WalletGetAssetsReturnType
   },
   /**
    * @description Returns the status of a call batch that was sent via `wallet_sendCalls`.
